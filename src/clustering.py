@@ -22,7 +22,19 @@ def get_distances(df_in: pd.DataFrame,
     df_ret = df_in.copy()
     clusters = centers.shape[1]
     df_ret['dist_to_cc'] = [
-        np.linalg.norm(centers[i] - df_in.loc[i, :]) for i in labels
+        np.linalg.norm(centers[cluster] - df_in.loc[i, :])
+        for i in enumerate(labels)
     ]
     return df_ret
+
+
+def compute_distortion(df_in: pd.DataFrame):
+    """
+    :param df_in:
+    :return:
+    """
+    distortion = np.mean(X['dist_to_cc'])
+    return distortion
+
+
 
