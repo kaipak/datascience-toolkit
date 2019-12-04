@@ -6,9 +6,8 @@ import numpy as np
 import pandas as pd
 
 
-def get_distances(df_in: pd.DataFrame,
-                  labels: np.ndarray, centers: np.ndarray,
-                  metric: str = 'Euclidean') -> pd.DataFrame:
+def get_distances(df: pd.DataFrame, labels: np.ndarray, centers: np.ndarray,
+                  metric: str='Euclidean') -> pd.DataFrame:
     """Compute centers to clusters for each observation
 
     Args:
@@ -19,22 +18,21 @@ def get_distances(df_in: pd.DataFrame,
         metric: Which norm to use when computing distance
 
     """
-    df_ret = df_in.copy()
+    df_ret = df.copy()
     clusters = centers.shape[1]
+
     df_ret['dist_to_cc'] = [
-        np.linalg.norm(centers[cluster] - df_in.loc[i, :])
-        for i in enumerate(labels)
+        np.linalg.norm(centers[label] - df.loc[i, :])
+        for i, label in enumerate(labels)
     ]
     return df_ret
 
 
-def compute_distortion(df_in: pd.DataFrame):
+def compute_distortion(df: pd.DataFrame):
     """
     :param df_in:
     :return:
     """
-    distortion = np.mean(X['dist_to_cc'])
+    distortion = np.mean(df['dist_to_cc'])
     return distortion
-
-
 
