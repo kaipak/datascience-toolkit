@@ -33,21 +33,24 @@ def eval_KMeans(df: pd.DataFrame, columns: list=None, clust_min: int=1,
     for n in num_clusters:
         cluster = KMeans(n_clusters=n)
         cluster.fit(df[columns])
+        mean_distances.append(np.mean(get_distances(df, cluster)))
+
+    sns.lineplot(num_clusters, mean_distances)
+    return(mean_distances)
 
 
-
-def get_distances(df: pd.DataFrame, labels: np.ndarray, centers: np.ndarray,
+def get_distances(df: pd.DataFrame, cluster: KMeans,
                   metric: str='Euclidean') -> pd.DataFrame:
     """Compute centers to clusters for each observation
 
     Args:
         df: Input dataframe or matrix to generate clusters
-        labels: Returned matrix of labels from clustering algorithm.
-            This is typically generated as cluster.cluster_centers_
-        centers: array of center coordinates that K_means generated
+        cluster: sklearn KMeans object
         metric: Which norm to use when computing distance
 
     """
+    centers = cluster.cluster_centers_
+    labels = cluster.labels_
 
     distances = [
         np.linalg.norm(centers[label] - df.loc[i, :])
